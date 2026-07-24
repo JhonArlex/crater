@@ -19,6 +19,11 @@ su -s /bin/sh crater-user -c 'cd /var/www && php artisan config:cache 2>/dev/nul
 su -s /bin/sh crater-user -c 'cd /var/www && php artisan route:cache 2>/dev/null' 2>/dev/null || true
 su -s /bin/sh crater-user -c 'cd /var/www && php artisan view:cache 2>/dev/null' 2>/dev/null || true
 
+# Ensure .env exists and is writable by PHP-FPM (www-data)
+touch /var/www/.env 2>/dev/null || true
+chown www-data:www-data /var/www/.env 2>/dev/null || true
+chmod 664 /var/www/.env 2>/dev/null || true
+
 # Fix permissions for PHP-FPM (runs as www-data)
 chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache 2>/dev/null || true
 chmod -R 775 /var/www/storage /var/www/bootstrap/cache 2>/dev/null || true
