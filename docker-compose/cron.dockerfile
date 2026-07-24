@@ -2,13 +2,11 @@ FROM composer:latest AS composer-stage
 
 FROM php:8.1-fpm-alpine
 
-# Install system dependencies for PHP extensions
+# Install system dependencies for PHP extensions (minimal - cron doesn't need imagick)
 RUN apk add --no-cache \
     libpng-dev \
     libzip-dev \
     libxml2-dev \
-    libmagickwand-dev \
-    imagemagick-dev \
     mariadb-client
 
 # Install PHP extensions (must match the main Dockerfile's extensions)
