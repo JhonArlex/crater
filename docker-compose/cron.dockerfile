@@ -2,7 +2,17 @@ FROM composer:latest AS composer-stage
 
 FROM php:8.1-fpm-alpine
 
-RUN docker-php-ext-install pdo pdo_mysql bcmath
+# Install system dependencies for PHP extensions
+RUN apk add --no-cache \
+    libpng-dev \
+    libzip-dev \
+    libxml2-dev \
+    libmagickwand-dev \
+    imagemagick-dev \
+    mariadb-client
+
+# Install PHP extensions (must match the main Dockerfile's extensions)
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
 # Copy composer from the official image
 COPY --from=composer-stage /usr/bin/composer /usr/bin/composer
