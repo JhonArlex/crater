@@ -24,7 +24,7 @@ su -s /bin/sh crater-user -c 'cd /var/www && php artisan migrate --force' 2>/dev
 
 # Fix permissions for PHP-FPM (runs as www-data)
 chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache 2>/dev/null || true
-chmod -R 755 /var/www/storage /var/www/bootstrap/cache 2>/dev/null || true
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache 2>/dev/null || true
 
 # Start PHP-FPM (as root - forks workers as www-data per the pool config)
 exec php-fpm
