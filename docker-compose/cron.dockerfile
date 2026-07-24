@@ -2,9 +2,6 @@ FROM composer:latest AS composer-stage
 
 FROM php:8.1-fpm-alpine
 
-RUN apk add --no-cache \
-    php8-bcmath
-
 RUN docker-php-ext-install pdo pdo_mysql bcmath
 
 # Copy composer from the official image
