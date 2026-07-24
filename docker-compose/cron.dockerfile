@@ -23,8 +23,8 @@ WORKDIR /var/www
 # Copy application code (build context is the repo root)
 COPY . /var/www/
 
-# Install composer dependencies
-RUN composer install --no-dev --no-interaction --optimize-autoloader
+# Install composer dependencies (skip scripts - no .env at build time)
+RUN composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
 
 # Copy crontab
 COPY docker-compose/crontab /etc/crontabs/root

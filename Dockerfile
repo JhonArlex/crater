@@ -38,8 +38,8 @@ WORKDIR /var/www
 # Copy application code (production-ready: code is baked into the image)
 COPY --chown=$user:$user . /var/www/
 
-# Install composer dependencies
-RUN composer install --no-dev --no-interaction --optimize-autoloader
+# Install composer dependencies (skip scripts - no .env at build time)
+RUN composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
 
 USER $user
 
