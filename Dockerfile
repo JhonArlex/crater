@@ -1,4 +1,4 @@
-FROM php:8.1-fpm
+FROM php:8.1-fpm as base
 
 # Arguments defined in docker-compose.yml
 ARG user
@@ -15,10 +15,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     libmagickwand-dev \
-    mariadb-client
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    mariadb-client \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pecl install imagick \
     && docker-php-ext-enable imagick
@@ -37,4 +35,18 @@ RUN mkdir -p /home/$user/.composer && \
 # Set working directory
 WORKDIR /var/www
 
+# Copy application code (production-ready: code is baked into the image)
+COPY --chown=$user:$user . /var/www/
+
+# Install composer dependencies
+RUN composer install --no-dev --no-interaction --optimize-autoloader
+
 USER $user
+
+# ============================================================
+# Nginx stage: build a self-contained nginx image with static assets
+# ============================================================
+FROM nginx:1.17-alpine as nginx
+
+COPY ./docker-compose/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=base /var/www/public /var/www/public
