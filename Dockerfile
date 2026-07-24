@@ -41,7 +41,11 @@ COPY --chown=$user:$user . /var/www/
 # Install composer dependencies (skip scripts - no .env at build time)
 RUN composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
 
-USER $user
+# Copy entrypoint script
+COPY docker-compose/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # ============================================================
 # Nginx stage: build a self-contained nginx image with static assets
