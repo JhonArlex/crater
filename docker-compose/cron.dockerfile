@@ -7,6 +7,7 @@ RUN apk add --no-cache \
     libpng-dev \
     libzip-dev \
     libxml2-dev \
+    oniguruma-dev \
     mariadb-client
 
 # Install PHP extensions (must match the main Dockerfile's extensions)
